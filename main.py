@@ -10,7 +10,7 @@ def main():
     logger = setup_logging()
     #logger.debug("Debug message")
     logger.info("Info message")
-    #logger.warning("Warning message")
+    logger.warning("Warning message")
     #logger.error("Error message")
     
     # 데이터 로드 및 전처리
