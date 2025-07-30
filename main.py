@@ -3,10 +3,16 @@
 #from src.model.train import train_model
 #from src.model.predict import predict
 #from src.optimization.maintenance import optimize_maintenance
-#from src.utils.logging import setup_logging
+from src.utils.logger import setup_logging
 
 def main():
- #   setup_logging()
+    # Test logging setup
+    logger = setup_logging()
+    #logger.debug("Debug message")
+    logger.info("Info message")
+    #logger.warning("Warning message")
+    #logger.error("Error message")
+    
     # 데이터 로드 및 전처리
 #    raw_data = load_data("data/raw/sensor_data.csv")
 #    processed_data = preprocess_data(raw_data)
@@ -22,5 +28,5 @@ def main():
 #    maintenance_schedule = optimize_maintenance(predictions)
 #    print("최적 유지보수 일정:", maintenance_schedule)
 
-#if __name__ == "__main__":
-#   main()
+if __name__ == "__main__":
+    main()

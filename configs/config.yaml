@@ -1,0 +1,23 @@
+data:
+  raw: "data/raw/sensor_data.csv"
+  processed: "data/processed/processed_data.csv"
+feature_engineering:
+  fft_window_size: 1024
+  temperature_smoothing: 5
+model:
+  algorithm: "random_forest"
+  random_forest:
+    n_estimators: 100
+    max_depth: 10
+  lstm:
+    units: 64
+    dropout: 0.2
+    epochs: 50
+    batch_size: 32
+optimization:
+  maintenance_cost: 1000
+  downtime_cost: 5000
+  max_maintenance_events: 10
+logging:
+  level: "INFO"
+  log_file: "logs/project.log"
