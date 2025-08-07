@@ -3,19 +3,13 @@ from src.data_processing import load_data, preprocess_data
 #from src.model.train import train_model
 #from src.model.predict import predict
 #from src.optimization.maintenance import optimize_maintenance
-#from src.utils.logger import setup_logging
 
 def main():
-    # Test logging setup
-    #logger = setup_logging()
-    #logger.debug("Debug message")
-    #logger.info("Info message")
-    #logger.warning("Warning message")
-    #logger.error("Error message")
-    
-    # 데이터 로드 및 전처리
+    # 데이터 로드
     raw_data = load_data(r"C:\Dev\KorailTM\test.csv")
     print(raw_data.head())
+
+    # 데이터 전처리
 #    processed_data = preprocess_data(raw_data)
 #    features = extract_features(processed_data)
     
