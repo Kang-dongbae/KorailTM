@@ -1,0 +1,84 @@
+# ===========================
+# Experiment Configuration
+# ===========================
+
+# Mode: supervised / unsupervised / transfer
+mode: transfer
+
+# ---------------------------
+# Data Settings
+# ---------------------------
+data:
+  train_path: "data/lab/train.csv"
+  test_path: "data/lab/test.csv"
+  real_train_path: "data/real/normal.csv"
+  real_test_path: "data/real/new.csv"
+  sampling_rate:
+    vib_low: 1000       # 1kHz 진동 데이터
+    vib_high: 25000     # 25kHz 진동 데이터
+    temp: 1             # 1Hz 온도 데이터
+  time_window:
+    vib_low: 57         # 초 단위
+    vib_high: 3
+    temp: 60            # 온도 데이터 윈도우(초)
+  sync_method: "timestamp"  # timestamp / index
+
+# ---------------------------
+# Feature Extraction
+# ---------------------------
+features:
+  temp:
+    use: true
+    metrics: ["mean", "std", "max", "min", "skew", "kurtosis", "rise_rate"]
+  vib_low:
+    use: true
+    metrics: ["rms", "peak", "crest_factor", "skew", "kurtosis", "spec_centroid"]
+    band_energy: [[0, 50], [50, 200], [200, 500]]
+  vib_high:
+    use: true
+    metrics: ["envelope_peak", "bpfi_amp", "bpfo_amp", "bsf_amp", "ftf_amp"]
+    fault_freqs:
+      bpfi: 120
+      bpfo: 90
+      bsf: 60
+      ftf: 10
+
+# ---------------------------
+# Model Parameters
+# ---------------------------
+model:
+  supervised:
+    type: "RandomForest"   # RandomForest / XGBoost / LSTM / CNN
+    params:
+      n_estimators: 200
+      max_depth: 10
+      random_state: 42
+  unsupervised:
+    type: "OneClassSVM"    # OneClassSVM / IsolationForest / Autoencoder
+    params:
+      kernel: "rbf"
+      nu: 0.05
+  transfer:
+    base_model: "CNN"      # CNN / LSTM
+    fine_tune_layers: 2
+    learning_rate: 0.001
+    epochs: 30
+    batch_size: 32
+
+# ---------------------------
+# Evaluation Metrics
+# ---------------------------
+evaluation:
+  classification: ["accuracy", "precision", "recall", "f1", "roc_auc"]
+  regression: ["mae", "rmse"]
+  confusion_matrix: true
+  save_results: true
+  output_dir: "results/"
+
+# ---------------------------
+# Logging & Visualization
+# ---------------------------
+logging:
+  verbose: true
+  save_plots: true
+  plot_dir: "plots/"
