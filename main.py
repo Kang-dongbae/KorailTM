@@ -8,6 +8,7 @@ def main():
     # 데이터 로드
     raw_data = load_data(r"C:\Dev\KorailTM\test.csv")
     print(raw_data.head())
+    print("test")
 
     # 데이터 전처리
 #    processed_data = preprocess_data(raw_data)
