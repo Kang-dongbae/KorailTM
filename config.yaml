@@ -2,25 +2,29 @@
 # Experiment Configuration
 # ===========================
 
-# Mode: supervised / unsupervised / transfer
-mode: transfer
+# 실행 단계 (baseline / domain_analysis / transfer / maintenance_ip / maintenance_rl)
+mode: baseline
 
 # ---------------------------
 # Data Settings
 # ---------------------------
 data:
-  train_path: "data/lab/train.csv"
-  test_path: "data/lab/test.csv"
-  real_train_path: "data/real/normal.csv"
-  real_test_path: "data/real/new.csv"
+  lab_train_path: "data/lab/train.csv"
+  lab_test_path: "data/lab/test.csv"
+  real_train_path: "data/real/train.csv"
+  real_test_path: "data/real/test.csv"
+  processed_dir: "data/processed/"
+  
   sampling_rate:
-    vib_low: 1000       # 1kHz 진동 데이터
-    vib_high: 25000     # 25kHz 진동 데이터
-    temp: 1             # 1Hz 온도 데이터
+    vib_low: 1000        # 1kHz 진동 데이터
+    vib_high: 25000      # 25kHz 진동 데이터
+    temp: 1              # 1Hz 온도 데이터
+  
   time_window:
-    vib_low: 57         # 초 단위
+    vib_low: 57          # 초 단위 윈도우
     vib_high: 3
-    temp: 60            # 온도 데이터 윈도우(초)
+    temp: 60             # 온도 데이터 윈도우
+  
   sync_method: "timestamp"  # timestamp / index
 
 # ---------------------------
@@ -33,7 +37,7 @@ features:
   vib_low:
     use: true
     metrics: ["rms", "peak", "crest_factor", "skew", "kurtosis", "spec_centroid"]
-    band_energy: [[0, 50], [50, 200], [200, 500]]
+    band_energy: [[0, 50], [50, 200], [200, 500]]  # Hz 범위
   vib_high:
     use: true
     metrics: ["envelope_peak", "bpfi_amp", "bpfo_amp", "bsf_amp", "ftf_amp"]
@@ -44,26 +48,30 @@ features:
       ftf: 10
 
 # ---------------------------
-# Model Parameters
+# Models
 # ---------------------------
 model:
-  supervised:
-    type: "RandomForest"   # RandomForest / XGBoost / LSTM / CNN
+  baseline:
+    type: "RandomForest"   # RandomForest / XGBoost / CNN / LSTM
     params:
       n_estimators: 200
       max_depth: 10
       random_state: 42
-  unsupervised:
-    type: "OneClassSVM"    # OneClassSVM / IsolationForest / Autoencoder
-    params:
-      kernel: "rbf"
-      nu: 0.05
   transfer:
     base_model: "CNN"      # CNN / LSTM
+    adaptation_method: "CORAL"  # CORAL / MMD / DANN
     fine_tune_layers: 2
     learning_rate: 0.001
     epochs: 30
     batch_size: 32
+
+# ---------------------------
+# Domain Analysis
+# ---------------------------
+domain_analysis:
+  methods: ["ks_test", "mmd", "tsne", "pca"]
+  save_plots: true
+  plot_dir: "plots/domain/"
 
 # ---------------------------
 # Evaluation Metrics
@@ -74,6 +82,20 @@ evaluation:
   confusion_matrix: true
   save_results: true
   output_dir: "results/"
+
+# ---------------------------
+# Maintenance Optimization
+# ---------------------------
+maintenance:
+  failure_rate_window: 30   # 일 단위
+  optimization_ip:
+    solver: "cplex"
+    planning_horizon: 180   # 일 단위
+  optimization_rl:
+    algorithm: "DQN"
+    episodes: 500
+    gamma: 0.95
+    epsilon: 0.1
 
 # ---------------------------
 # Logging & Visualization

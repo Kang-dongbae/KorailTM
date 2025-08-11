@@ -1,3 +1,4 @@
+import os
 import yaml
 #from src.data.data_processing import load_and_preprocess
 #from src.data.feature_eng import extract_features
@@ -7,9 +8,11 @@ import yaml
 #from src.models import supervised, unsupervised, transfer
 
 def main():
-    
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # main.py 위치
+    config_path = os.path.join(base_dir, "config.yaml")
+
     # 1. 설정 불러오기
-    with open('config.yaml', 'r', encoding='utf-8') as f:
+    with open(config_path, 'r', encoding='utf-8') as f:
         cfg = yaml.safe_load(f)
     
     print(cfg)
